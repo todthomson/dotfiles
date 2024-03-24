@@ -1,0 +1,113 @@
+# freshshell.com
+#
+# Examples:
+#
+#   fresh twe4ked/dotfiles shell/functions/\*
+#   fresh jasoncodes/dotfiles shell/aliases/rails.sh
+#   fresh jasoncodes/dotfiles config/tmux.conf --file
+#
+# See http://freshshell.com/readme for documentation.
+
+fresh freshshell/fresh bin/fresh --bin
+
+for file in ~/.bash_profile ~/.bashrc; do
+  fresh JonathonMA/dotfiles shell/noninteractive.sh --file=$file
+  fresh JonathonMA/dotfiles shell/path_pre.sh --file=$file
+  fresh shell/path.sh --file=$file
+  fresh JonathonMA/dotfiles shell/path.sh --file=$file
+  fresh JonathonMA/dotfiles shell/path_post.sh --file=$file
+  fresh freshshell/fresh contrib/source-build.sh --file=$file
+done
+
+fresh-options --file=~/.bash_logout
+  fresh JonathonMA/dotfiles shell/logout/*
+fresh-options
+
+fresh jasoncodes/ctrlp-modified.vim lib/branch.sh --bin
+fresh jasoncodes/ctrlp-modified.vim lib/branch_modified.sh --bin
+fresh jasoncodes/ctrlp-modified.vim lib/modified.sh --bin
+
+ensure_checkout() {
+  local _tmp="$(mktemp)"
+  fresh-options --file=$_tmp
+  fresh "$@"
+  fresh-options
+
+  rm "$_tmp"
+}
+ensure_checkout tinted-theming/base16-shell profile_helper.sh
+
+# rg
+# nvim
+
+# Shell
+fresh JonathonMA/dotfiles shell/noninteractive.sh
+fresh JonathonMA/dotfiles shell/has_command_pre.sh
+fresh JonathonMA/dotfiles 'shell/aliases/ls.sh'
+fresh 'shell/aliases/*.sh'
+fresh shell/config/fresh.sh
+fresh shell/config/asdf.sh
+fresh shell/config/base16.sh
+fresh JonathonMA/dotfiles shell/config/debian_completion.sh
+fresh JonathonMA/dotfiles shell/config/editor.sh
+fresh JonathonMA/dotfiles shell/config/fzf-completion.sh
+fresh JonathonMA/dotfiles shell/config/fzf.sh
+fresh JonathonMA/dotfiles shell/config/history.sh
+fresh JonathonMA/dotfiles shell/config/less.sh
+fresh JonathonMA/dotfiles shell/config/manwidth.sh
+fresh JonathonMA/dotfiles shell/config/prompt.sh
+fresh JonathonMA/dotfiles shell/config/ripgrep.sh
+fresh JonathonMA/dotfiles shell/config/xdg.sh
+fresh JonathonMA/dotfiles shell/has_command_post.sh
+fresh rcaloras/bash-preexec bash-preexec.sh
+fresh JonathonMA/dotfiles shell/preexec.sh
+
+fresh garybernhardt/dotfiles .githelpers --file=~/.local/share/git/helpers
+# fresh seebi/dircolors-solarized dircolors.ansi-dark --file=~/.dircolors
+
+mkdir -p ~/.cache/ ~/.config/ ~/.local/share/
+
+# NVim
+
+fresh JonathonMA/dotfiles nvim/vimscript_before.lua --file=${XDG_CONFIG_HOME:-$HOME/.config}/nvim/lua/init_vim.lua
+fresh-options --file=${XDG_CONFIG_HOME:-$HOME/.config}/nvim/lua/init_vim.lua --marker='"'
+  fresh JonathonMA/dotfiles nvim/preamble.vim
+  fresh JonathonMA/dotfiles nvim/leader.vim
+  fresh JonathonMA/dotfiles nvim/global.vim
+  fresh JonathonMA/dotfiles 'nvim/config/*'
+  fresh JonathonMA/dotfiles nvim/mappings.vim
+  fresh jasoncodes/dotfiles vim/config/auto_mkdir.vim
+  fresh JonathonMA/dotfiles nvim/exrc.vim
+  fresh JonathonMA/dotfiles nvim/vimscript_after.lua
+fresh-options
+
+fresh-options --file=${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua --marker='--'
+  fresh JonathonMA/dotfiles nvim/init.lua
+  fresh JonathonMA/dotfiles nvim/lazy.lua
+fresh-options
+
+for plugin in ale asm_ca65 base16 bufexplorer comment endwise eunuch fetch git limelight lualine org pgn plenary prettier rails rdf renamer rspec ruby-heredoc-syntax sensible surround tabular telescope titlecase todo-comments treesitter typography unimpaired; do
+  fresh JonathonMA/dotfiles "nvim/plugins/${plugin}.lua" --file="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/lua/plugins/${plugin}.lua"
+done
+
+# Gitignore
+fresh-options --file=${XDG_CONFIG_HOME:-$HOME/.config}/git/ignore --marker=#
+  fresh github/gitignore Global/Vim.gitignore
+  fresh github/gitignore Global/macOS.gitignore
+  fresh github/gitignore Global/Tags.gitignore
+fresh-options
+
+# Git aliases
+fresh-options --file=${XDG_CONFIG_HOME:-$HOME/.config}/git/config --marker=#
+  fresh JonathonMA/dotfiles git/alias_before.gitconfig
+  fresh JonathonMA/dotfiles 'git/aliases/*'
+  fresh JonathonMA/dotfiles git/config/aliases
+  fresh JonathonMA/dotfiles git/config/global
+  fresh JonathonMA/dotfiles git/config/logging
+  fresh JonathonMA/dotfiles git/config/rebase
+fresh-options
+
+fresh config/ripgrep --file=~/.config/ripgrep
+
+# Manage fonts
+"$FRESH_LOCAL/fonts"

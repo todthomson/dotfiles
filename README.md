@@ -11,3 +11,4 @@ $ FRESH_LOCAL_SOURCE=todthomson/dotfiles \
 My dotfiles are managed by [fresh].
 
 [fresh]: http://freshshell.com
+
